@@ -20,3 +20,8 @@ Get the latest installer from the [Releases page](https://github.com/negrosuck45
 
 - Website: https://stram.lol
 - Issues: https://github.com/negrosuck45-bit/stram-desktop/issues
+
+## Verify the download
+
+SHA256: `9120b09d233e7c54fdd6e6e1f2d0f31093218b6ad690e32c8733ba7a1214ce89`
+
