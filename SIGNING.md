@@ -1,4 +1,4 @@
-# Signing Stram Desktop
+﻿# Signing Stram Desktop
 
 Windows shows **"Unknown publisher"** because `Stram-Setup-*.exe` is not signed with a certificate that Windows trusts. The only real fix is to sign the installer and the app executable with a trusted code-signing certificate.
 
@@ -67,8 +67,8 @@ electron-builder installs the `TrustedSigning` PowerShell module and signs both 
 ### 4. Verify the signature
 
 ```powershell
-signtool verify /pa /v "dist\Stram-Setup-1.2.0.exe"
-Get-AuthenticodeSignature "dist\Stram-Setup-1.2.0.exe" | Format-List Status, StatusMessage, SignerCertificate
+signtool verify /pa /v "dist\Stram-Setup-1.2.1.exe"
+Get-AuthenticodeSignature "dist\Stram-Setup-1.2.1.exe" | Format-List Status, StatusMessage, SignerCertificate
 ```
 
 `Status` should be `Valid`. The publisher in the file properties should now be your validated name instead of "Unknown publisher".
@@ -128,7 +128,7 @@ Signing does **not** make the app itself safe. Stram Desktop is a thin Electron 
 
 1. Recompute the checksum:
    ```powershell
-   Get-FileHash "dist\Stram-Setup-1.2.0.exe" -Algorithm SHA256
+   Get-FileHash "dist\Stram-Setup-1.2.1.exe" -Algorithm SHA256
    ```
 2. Update `SHA256SUMS.txt` and the README.
 3. Upload the signed installer and portable exe to the GitHub release.
