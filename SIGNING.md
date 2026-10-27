@@ -4,7 +4,7 @@ Windows shows **"Unknown publisher"** because `Stram-Setup-*.exe` is not signed 
 
 A self-signed certificate does **not** remove the warning. Windows does not trust it, and it can make the warning worse.
 
-There are two practical options.
+There are two paid practical options, plus limited free routes for open-source projects.
 
 ---
 
@@ -67,8 +67,8 @@ electron-builder installs the `TrustedSigning` PowerShell module and signs both 
 ### 4. Verify the signature
 
 ```powershell
-signtool verify /pa /v "dist\Stram-Setup-1.1.0.exe"
-Get-AuthenticodeSignature "dist\Stram-Setup-1.1.0.exe" | Format-List Status, StatusMessage, SignerCertificate
+signtool verify /pa /v "dist\Stram-Setup-1.2.0.exe"
+Get-AuthenticodeSignature "dist\Stram-Setup-1.2.0.exe" | Format-List Status, StatusMessage, SignerCertificate
 ```
 
 `Status` should be `Valid`. The publisher in the file properties should now be your validated name instead of "Unknown publisher".
@@ -103,6 +103,18 @@ Use the CA's signing tool, or configure a custom `signtoolOptions.sign` hook in 
 
 ---
 
+## Free options (open source or Store)
+
+There is **no free certificate** that removes “Unknown publisher” for a closed-source app. These are the only realistic free/cheap routes:
+
+- **SignPath Foundation** — free code signing for eligible open-source projects. The project must be public, use an accepted open-source licence, and pass an application review. Apply at [signpath.org](https://signpath.org/).
+- **Certum Open Source Code Signing** — free certificate for eligible open-source projects, subject to Certum's review and terms.
+- **Microsoft Store** — a one-time individual developer account (about $19) publishes an MSIX that Microsoft signs. This avoids the SmartScreen warning, but the app must pass Store review.
+
+If you want to use SignPath or Certum, the desktop wrapper has to be open-sourced first. That does not require publishing the stram.lol site source; it only means publishing the Electron wrapper in `stram-desktop`.
+
+---
+
 ## What signing does and does not do
 
 Signing proves:
@@ -116,7 +128,7 @@ Signing does **not** make the app itself safe. Stram Desktop is a thin Electron 
 
 1. Recompute the checksum:
    ```powershell
-   Get-FileHash "dist\Stram-Setup-1.1.0.exe" -Algorithm SHA256
+   Get-FileHash "dist\Stram-Setup-1.2.0.exe" -Algorithm SHA256
    ```
 2. Update `SHA256SUMS.txt` and the README.
 3. Upload the signed installer and portable exe to the GitHub release.
