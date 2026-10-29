@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; style-src 'self'; script-src 'self'; img-src 'self' data:"
+    />
+    <title>Stram settings</title>
+    <link rel="stylesheet" href="pages.css" />
+  </head>
+  <body>
+    <main class="page">
+      <section class="card">
+        <div class="brand">
+          <svg viewBox="0 0 64 64" aria-hidden="true">
+            <path
+              fill="#E9E7FF"
+              d="M48.28 46.88A22.42 22.42 0 0 1 18.12 16.72 22.42 22.42 0 1 0 48.28 46.88Z"
+            />
+            <path fill="#B8AEFF" opacity=".55" d="M43.46 42.11a18.5 18.5 0 0 1-15.6-15.6 18.63 18.63 0 0 0 15.6 15.6Z" />
+          </svg>
+          <div>
+            <div class="brand-name">Stram</div>
+            <div class="brand-sub">Desktop settings</div>
+          </div>
+        </div>
+
+        <form id="form" novalidate>
+          <label for="url">Site address</label>
+          <input
+            id="url"
+            name="url"
+            type="url"
+            inputmode="url"
+            spellcheck="false"
+            autocomplete="off"
+            placeholder="https://stram.lol"
+          />
+          <div class="hint" id="hint">The app loads this address in its own window.</div>
+
+          <div class="actions">
+            <button class="primary" id="save" type="submit">Save and reload</button>
+            <button class="ghost" id="reset" type="button">Reset to stram.lol</button>
+          </div>
+        </form>
+
+        <div class="footer">
+          <span id="version">Stram Desktop</span>
+          <button class="link" id="downloads" type="button">Open downloads folder</button>
+        </div>
+      </section>
+    </main>
+
+    <script src="settings.js"></script>
+  </body>
+</html>

@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; style-src 'self'; script-src 'self'; img-src 'self' data:"
+    />
+    <title>Can't reach Stram</title>
+    <link rel="stylesheet" href="pages.css" />
+  </head>
+  <body>
+    <main class="page">
+      <section class="card">
+        <div class="brand">
+          <svg viewBox="0 0 64 64" aria-hidden="true">
+            <path
+              fill="#E9E7FF"
+              d="M48.28 46.88A22.42 22.42 0 0 1 18.12 16.72 22.42 22.42 0 1 0 48.28 46.88Z"
+            />
+            <path fill="#B8AEFF" opacity=".55" d="M43.46 42.11a18.5 18.5 0 0 1-15.6-15.6 18.63 18.63 0 0 0 15.6 15.6Z" />
+          </svg>
+          <div>
+            <div class="brand-name">Stram</div>
+            <div class="brand-sub">Desktop</div>
+          </div>
+        </div>
+
+        <h1>Can't reach the site</h1>
+        <p>
+          Check your internet connection, then try again. If the site is down, it usually comes back in a
+          minute.
+        </p>
+
+        <div class="detail" id="detail">Loading details…</div>
+
+        <div class="actions">
+          <button class="primary" id="retry" type="button">Try again</button>
+          <button class="ghost" id="browser" type="button">Open in browser</button>
+          <button class="link" id="settings" type="button">Change site address</button>
+        </div>
+
+        <div class="footer">
+          <span id="site">stram.lol</span>
+          <span id="version"></span>
+        </div>
+      </section>
+    </main>
+
+    <script src="offline.js"></script>
+  </body>
+</html>

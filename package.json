@@ -1,0 +1,80 @@
+{
+  "name": "stram-desktop",
+  "productName": "Stram",
+  "version": "1.2.7",
+  "description": "Stram desktop app - your AI workspace and profile in its own window.",
+  "main": "electron/main.js",
+  "author": {
+    "name": "Stram"
+  },
+  "license": "UNLICENSED",
+  "private": true,
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron . --dev",
+    "icon": "node scripts/make-icon.js",
+    "dist": "npm run icon && electron-builder --win nsis portable",
+    "dist:dir": "electron-builder --win dir"
+  },
+  "devDependencies": {
+    "electron": "45.0.0",
+    "electron-builder": "26.18.0",
+    "sharp": "^0.35.4"
+  },
+  "build": {
+    "appId": "com.stram.desktop",
+    "productName": "Stram",
+    "copyright": "Copyright (c) 2026 Stram",
+    "directories": {
+      "output": "dist",
+      "buildResources": "build"
+    },
+    "files": [
+      "electron/**/*",
+      "assets/**/*",
+      "package.json"
+    ],
+    "asar": true,
+    "compression": "normal",
+    "protocols": [
+      {
+        "name": "Stram sign-in",
+        "schemes": [
+          "stram"
+        ]
+      }
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "build/icon.ico",
+      "artifactName": "Stram-Setup-${version}.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowElevation": true,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Stram",
+      "uninstallDisplayName": "Stram ${version}",
+      "deleteAppDataOnUninstall": false
+    },
+    "portable": {
+      "artifactName": "Stram-Portable-${version}.${ext}"
+    }
+  }
+}

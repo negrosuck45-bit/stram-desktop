@@ -1,0 +1,209 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<style>
+  :root { color-scheme: dark; }
+  * { box-sizing: border-box; user-select: none; }
+  html, body { margin: 0; padding: 0; height: 80px; overflow: hidden; }
+  body {
+    background: #1c1c1c;
+    color: #e8e8e8;
+    font-family: "Segoe UI", system-ui, sans-serif;
+    display: flex; flex-direction: column;
+    border-left: 1px solid #ffffff12;
+    box-shadow: -18px 0 50px #00000038;
+  }
+  .topbar {
+    display: flex; align-items: center; gap: 4px;
+    height: 38px; padding: 4px 6px;
+    border-bottom: 1px solid #ffffff0d;
+  }
+  .tabs {
+    display: flex; align-items: center; gap: 3px;
+    flex: 1 1 auto; min-width: 0; overflow-x: auto; overflow-y: hidden;
+    scrollbar-width: none;
+  }
+  .tabs::-webkit-scrollbar { display: none; }
+  .chip {
+    flex: 0 1 auto; min-width: 34px; max-width: 168px;
+    display: inline-flex; align-items: center; gap: 6px;
+    height: 28px; padding: 0 6px 0 8px;
+    border-radius: 7px; background: transparent; color: #b9b9b9;
+    font-size: 11.5px; white-space: nowrap; cursor: pointer;
+  }
+  .chip:hover { background: #ffffff10; }
+  .chip.active { background: #333333; color: #f5f5f5; }
+  .chip .icon { width: 14px; height: 14px; flex-shrink: 0; display: inline-flex; }
+  .chip img.fav { width: 14px; height: 14px; border-radius: 3px; }
+  .chip .dot { width: 14px; height: 14px; border-radius: 4px; background: #4a4a4a; display: inline-flex; align-items: center; justify-content: center; font-size: 8px; color: #ddd; }
+  .chip .title { overflow: hidden; text-overflow: ellipsis; }
+  .chip .x {
+    flex-shrink: 0; width: 16px; height: 16px; margin-left: 1px;
+    display: inline-flex; align-items: center; justify-content: center;
+    border-radius: 4px; color: #9a9a9a; font-size: 13px; line-height: 1;
+  }
+  .chip .x:hover { background: #ffffff1c; color: #fff; }
+  .chip .aud { color: #6fcf8f; font-size: 9px; }
+  .icon-btn {
+    flex-shrink: 0; width: 28px; height: 28px; padding: 0;
+    border: 0; border-radius: 7px; background: transparent; color: #b9b9b9;
+    font: inherit; font-size: 16px; line-height: 1; cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .icon-btn:hover { background: #ffffff10; color: #fff; }
+  .icon-btn:disabled { opacity: 0.35; cursor: default; }
+  .icon-btn:disabled:hover { background: transparent; color: #b9b9b9; }
+  .nav {
+    display: flex; align-items: center; gap: 3px;
+    height: 42px; padding: 5px 6px 6px;
+  }
+  .nav .icon-btn { width: 26px; height: 26px; border-radius: 6px; font-size: 14px; }
+  #addr {
+    flex: 1 1 auto; min-width: 60px; height: 30px;
+    border-radius: 8px; border: 1px solid #ffffff18;
+    background: #141414; color: #eee;
+    padding: 0 10px; font-size: 12px; outline: none;
+    user-select: text;
+  }
+  #addr:focus { border-color: #ffffff38; background: #101010; }
+  #addr::placeholder { color: #6f6f6f; }
+  #go { width: auto; padding: 0 9px; font-size: 11px; }
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="tabs" id="tabs"></div>
+    <button class="icon-btn" id="plus" title="New tab" aria-label="New tab">+</button>
+    <button class="icon-btn" id="hide" title="Hide browser" aria-label="Hide browser">&#215;</button>
+  </div>
+  <div class="nav">
+    <button class="icon-btn" id="back" title="Back" aria-label="Back">&#8249;</button>
+    <button class="icon-btn" id="forward" title="Forward" aria-label="Forward">&#8250;</button>
+    <button class="icon-btn" id="reload" title="Reload" aria-label="Reload">&#8635;</button>
+    <input id="addr" placeholder="Search or enter an address" spellcheck="false" autocomplete="off" />
+    <button class="icon-btn" id="go" title="Open address" aria-label="Open address">Open</button>
+  </div>
+<script>
+  const tabsEl = document.getElementById('tabs')
+  const addrEl = document.getElementById('addr')
+  let state = { active: null, tabs: [] }
+  let lastAddress = ''
+  let addressDirty = false
+
+  const ICON = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"/></svg>'
+
+  function activeTab() {
+    return (state.tabs || []).find((tab) => tab.id === state.active) || null
+  }
+
+  function renderTabs() {
+    tabsEl.innerHTML = ''
+    for (const tab of state.tabs || []) {
+      const chip = document.createElement('div')
+      chip.className = 'chip' + (state.active === tab.id ? ' active' : '')
+      chip.title = tab.url || 'New tab'
+
+      const icon = document.createElement('span')
+      icon.className = 'icon'
+      if (tab.favicon) {
+        const img = document.createElement('img')
+        img.className = 'fav'
+        img.src = tab.favicon
+        img.alt = ''
+        img.onerror = () => { icon.innerHTML = '<span class="dot">' + ICON + '</span>' }
+        icon.appendChild(img)
+      } else {
+        icon.innerHTML = '<span class="dot">' + ICON + '</span>'
+      }
+      chip.appendChild(icon)
+
+      const title = document.createElement('span')
+      title.className = 'title'
+      title.textContent = tab.title || 'New tab'
+      chip.appendChild(title)
+
+      if (tab.audible) {
+        const audible = document.createElement('span')
+        audible.className = 'aud'
+        audible.textContent = '\u266B'
+        chip.appendChild(audible)
+      }
+
+      const close = document.createElement('span')
+      close.className = 'x'
+      close.textContent = '\u00d7'
+      close.title = 'Close tab'
+      close.addEventListener('click', (event) => {
+        event.stopPropagation()
+        window.stramTabs.close(tab.id)
+      })
+      chip.appendChild(close)
+
+      chip.addEventListener('click', () => window.stramTabs.activate(tab.id))
+      tabsEl.appendChild(chip)
+    }
+  }
+
+  function renderAddress(force) {
+    const tab = activeTab()
+    const value = tab && !tab.blank ? (tab.url || '') : ''
+    // Never overwrite a half-typed address, but always reflect navigation the
+    // AI or a link started, even while the input still has focus.
+    if (force || !addressDirty) {
+      addrEl.value = value
+      lastAddress = value
+    }
+  }
+
+  function render() {
+    renderTabs()
+    renderAddress(false)
+    const tab = activeTab()
+    if (tab && tab.blank) {
+      addrEl.placeholder = 'Search or enter an address'
+      if (document.activeElement !== addrEl) addrEl.focus()
+    }
+  }
+
+  function navigate() {
+    const value = addrEl.value.trim()
+    if (!value) return
+    const tab = activeTab()
+    addressDirty = false
+    if (!tab || tab.blank) {
+      window.stramTabs.openUrl(value)
+    } else {
+      window.stramTabs.command('navigate', { url: value })
+    }
+    addrEl.blur()
+  }
+
+  document.getElementById('plus').addEventListener('click', () => window.stramTabs.newTab())
+  document.getElementById('hide').addEventListener('click', () => window.stramTabs.hide())
+  document.getElementById('back').addEventListener('click', () => window.stramTabs.command('back'))
+  document.getElementById('forward').addEventListener('click', () => window.stramTabs.command('forward'))
+  document.getElementById('reload').addEventListener('click', () => window.stramTabs.command('reload'))
+  document.getElementById('go').addEventListener('click', navigate)
+  addrEl.addEventListener('focus', () => addrEl.select())
+  addrEl.addEventListener('input', () => { addressDirty = true })
+  addrEl.addEventListener('blur', () => { addressDirty = false; renderAddress(true) })
+  addrEl.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter') {
+      event.preventDefault()
+      navigate()
+    } else if (event.key === 'Escape') {
+      addressDirty = false
+      addrEl.value = lastAddress
+      addrEl.blur()
+    }
+  })
+
+  window.stramTabs.onState((next) => { state = next || state; render() })
+  window.stramTabs.list().then((next) => {
+    if (next && next.ok) { state = { active: next.active, tabs: next.tabs || [] }; render() }
+  }).catch(() => {})
+  render()
+</script>
+</body>
+</html>

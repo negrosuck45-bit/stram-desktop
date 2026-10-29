@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; style-src 'self'; script-src 'self'; img-src 'self' data:"
+    />
+    <title>Sign in to Stram</title>
+    <link rel="stylesheet" href="signin.css" />
+  </head>
+  <body>
+    <main class="signin">
+      <div class="dots" aria-hidden="true"></div>
+
+      <section class="panel">
+        <div class="mark" aria-hidden="true">
+          <svg viewBox="0 0 64 64">
+            <path
+              fill="#FFFFFF"
+              d="M48.28 46.88A22.42 22.42 0 0 1 18.12 16.72 22.42 22.42 0 1 0 48.28 46.88Z"
+            />
+            <path
+              fill="#FFFFFF"
+              opacity=".5"
+              d="M43.46 42.11a18.5 18.5 0 0 1-15.6-15.6 18.63 18.63 0 0 0 15.6 15.6Z"
+            />
+          </svg>
+        </div>
+
+        <h1>Sign in to Stram</h1>
+
+        <button class="signin-button" id="signin" type="button">Sign in</button>
+        <p class="status" id="status" role="status" aria-live="polite"></p>
+      </section>
+
+      <footer class="footer">
+        <span>By continuing, you agree to our</span>
+        <button class="link" type="button" data-url="https://stram.lol/terms">Terms of Service</button>
+        <span>and</span>
+        <button class="link" type="button" data-url="https://stram.lol/privacy">Privacy Policy</button>
+      </footer>
+    </main>
+
+    <script src="signin.js"></script>
+  </body>
+</html>

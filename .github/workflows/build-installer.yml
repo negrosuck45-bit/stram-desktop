@@ -1,0 +1,43 @@
+name: Build installer
+
+on:
+  push:
+    branches: [ci-1.2.7]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+    env:
+      CSC_IDENTITY_AUTO_DISCOVERY: "false"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build icons
+        run: npm run icon
+
+      - name: Build NSIS installer
+        run: npx --no-install electron-builder --win nsis --x64
+
+      - name: Show checksum
+        shell: pwsh
+        run: Get-FileHash dist/Stram-Setup-1.2.7.exe -Algorithm SHA256 | Format-List
+
+      - name: Attach installer to draft release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh release upload v1.2.7 dist/Stram-Setup-1.2.7.exe --clobber --repo "${{ github.repository }}"
