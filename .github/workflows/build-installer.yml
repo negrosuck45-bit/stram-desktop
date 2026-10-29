@@ -30,7 +30,7 @@ jobs:
         run: npm run icon
 
       - name: Build NSIS installer
-        run: npx --no-install electron-builder --win nsis --x64
+        run: npx --no-install electron-builder --win nsis --x64 --publish never
 
       - name: Show checksum
         shell: pwsh
